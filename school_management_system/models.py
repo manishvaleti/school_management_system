@@ -53,5 +53,5 @@ class ClassRegister(models.Model):
     marks = models.IntegerField(default=0)
 
 class SuperKey(models.Model):
-    payment_id = models.ForeignKey(Payment,on_delete=models.CASCADE)
-    class_reg_id = models.ForeignKey(ClassRegister,on_delete=models.CASCADE)
+    payment_id = models.ForeignKey(Payment,on_delete=models.CASCADE, default=1)
+    class_reg_id = models.ForeignKey(ClassRegister,on_delete=models.CASCADE, default = 1)
