@@ -1,0 +1,72 @@
+{% extends "html/base.html" %}
+{% block title %}Staff{% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'html/sidebar.html' %}
+        <div class="col">
+            <div class="row mb-3">
+                <div class="col-md-auto mt-5">
+                    <a href="{% url 'add_class_register' %}" class="btn btn-primary">Add Registration</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table" id="staff-table">
+                        <thead>
+                            <tr>
+                                <th>Class</th>
+                                <th>Student</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for registration in registrations %}
+                                <tr data-register-id="{{ registration.id }}">
+                                    <td>{{ registration.classes }}</td>
+                                    <td>{{ registration.student }}</td>
+                                    <td>
+                                        <button class='btn btn-danger btn-delete'>Delete</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function() {
+            const tr = this.closest('tr');
+            const studentId = tr.getAttribute('data-register-id');
+            
+            fetch(`/delete_class_register/${studentId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // If deletion is successful, remove the row from the table
+                    tr.remove();
+                } else {
+                    console.error('Error deleting staff member');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>
+{% endblock content %}

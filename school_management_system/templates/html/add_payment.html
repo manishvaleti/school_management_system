@@ -1,0 +1,21 @@
+{% extends "html/base.html" %}
+{% block title %}Add Payment{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Add Payment</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Add Payment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

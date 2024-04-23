@@ -1,0 +1,42 @@
+<nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar" style="height: 100vh;">
+    <div class="position-sticky" style="top: 0; height: 100%;">
+        <div class="list-group flex-grow-1">
+            <!-- Removed unnecessary navbar-collapse -->
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'staff' %}" style="font-size: 1.5rem;">
+                        <i class="fas fa-user-tie"></i> Staff
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'student_list' %}" style="font-size: 1.5rem;">
+                        <i class="fas fa-user-graduate"></i> Students
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'subject_list' %}" style="font-size: 1.5rem;">
+                        <i class="fas fa-book"></i> Subjects
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'classes_list' %}" style="font-size: 1.5rem;">
+                        <i class="fas fa-landmark"></i> Classes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'class_register_list' %}" style="font-size: 1.5rem;">
+                        <i class="far fa-calendar-alt"></i> Registration
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'payment_list' %}" style="font-size: 1.5rem;">
+                        <i class="fas fa-money-bill"></i> Payment
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+        
+        
+    </div>
+</nav>

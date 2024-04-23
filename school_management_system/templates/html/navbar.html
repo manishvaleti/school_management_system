@@ -1,0 +1,38 @@
+{% comment %} {% load static %}
+
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+        <span class="navbar-brand mb-0 h1">School Management System</span>
+        {% if user.is_authenticated %}
+        <div class="dropdown ml-auto mr-auto">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user-circle fa-lg"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                
+                <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                
+            </ul>
+        {% endif %}
+        </div>
+    </div>
+</nav> {% endcomment %}
+{% load static %}
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'img/image.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+            <span class="ml-2 navbar-text text-light">School Management System</span>
+        </a>
+        {% if user.is_authenticated %}
+        <div class="dropdown ml-auto">
+            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user-circle fa-lg"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        {% endif %}
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,78 @@
+{% extends "html/base.html" %}
+{% block title %}Students{% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'html/sidebar.html' %}
+        <div class="col">
+            <div class="row mb-3">
+                <div class="col-md-auto mt-5">
+                    <a href="{% url 'add_student' %}" class="btn btn-primary">Add Student</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table" id="staff-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Date of Birth</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            {% for student in students %}
+                                <tr data-student-id="{{ student.id }}">
+                                    <td>{{ student.name }}</td>
+                                    <td>{{ student.dob }}</td>
+                                    <td>{{ student.age }}</td>
+                                    <td>{{ student.phone }}</td>
+                                    <td>
+                                        <a href={% url 'view_student_details' student.id %} class='btn btn-primary' >View</a>
+                                        <a href={% url 'edit_student' student.id %} class='btn btn-success btn-view'>Edit</a>
+                                        <button class='btn btn-danger btn-delete'>Delete</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function() {
+            const tr = this.closest('tr');
+            const studentId = tr.getAttribute('data-student-id');
+            
+            fetch(`/delete_student/${studentId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // If deletion is successful, remove the row from the table
+                    tr.remove();
+                } else {
+                    console.error('Error deleting staff member');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>
+{% endblock content %}

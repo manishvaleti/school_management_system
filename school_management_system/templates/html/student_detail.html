@@ -1,0 +1,63 @@
+{% extends "html/base.html" %}
+{% block title %}Student Details{% endblock title %}
+
+{% block styles %}
+<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+
+{% endblock styles %}
+
+{% block content %}
+<div class="container-fluid"><br>
+    <h2>Student Section</h2><br>
+    <h6><b>Name:</b> {{ student.name }}</h6>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Payments
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for payment in payments %}
+                        <li class="list-group-item">
+                            <strong>Total Amount:</strong> {{ payment.total_amount }}<br> 
+                            <strong>Due Amount:</strong> {{ payment.due_amount }}<br> 
+                            <strong>Paid Amount:</strong> {{ payment.paid_amount }}<br> 
+                            <strong>Payment Date:</strong> {{ payment.payment_date }}<br> 
+                            <strong>Due Date:</strong> {{ payment.due_date }}
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item">No payments found.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Classes Registered
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for class_register in class_registers %}
+                        <li class="list-group-item">
+                            <div>
+                            <strong>Class:</strong> {{ class_register.classes }} | 
+                            <strong>Marks:</strong> {{ class_register.marks }}
+                            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                            <a href = '{% url 'update_marks' class_register.id %}' type="button" class="btn btn-primary">Edit</a> 
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item">No classes registered.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

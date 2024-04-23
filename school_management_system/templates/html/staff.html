@@ -1,0 +1,129 @@
+{% extends "html/base.html" %}
+{% block title %}Staff{% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'html/sidebar.html' %}
+        <div class="col">
+            <div class="row mb-3">
+                <div class="col-md-auto mt-5">
+                    <a href="{% url 'add_staff' %}" class="btn btn-primary">Add Staff</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table" id="staff-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Join Date</th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Actions</th>
+                                <!-- Add more columns as needed -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in records %}
+                            <tr data-record-id="{{ record.id }}">
+                                <td><a href="#" class="btn-view" data-record-id="{{ record.id }}">{{ record.name }}</a></td>
+                                <td>{{ record.email }}</td>
+                                <td>{{ record.phone }}</td>
+                                <td>{{ record.join_date }}</td>
+                                <td>{{ record.address }}</td>
+                                <td>
+                                    <a href={% url 'edit_staff' record.id %} class='btn btn-success btn-view'>Edit</a>
+                                    <button class='btn btn-danger btn-delete'>Delete</button>
+                                </td>
+                                <!-- Add more cells for additional columns -->
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="classModal" tabindex="-1" role="dialog" aria-labelledby="classModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="classModalLabel">Classes Teaching</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="classModalBody">
+                <!-- Class list will be displayed here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function() {
+            const tr = this.closest('tr');
+            const recordId = tr.getAttribute('data-record-id');
+            
+            fetch(`/delete_staff/${recordId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // If deletion is successful, remove the row from the table
+                    tr.remove();
+                } else {
+                    console.error('Error deleting staff member');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-view').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const recordId = this.getAttribute('data-record-id');
+
+            fetch(`/staff_classes/${recordId}/`)
+            .then(response => response.json())
+            .then(data => {
+                const classesList = document.createElement('ul');
+                data.forEach(className => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = className;
+                    classesList.appendChild(listItem);
+                });
+
+                const modalBody = document.getElementById('classModalBody');
+                modalBody.innerHTML = '';
+                modalBody.appendChild(classesList);
+
+                $('#classModal').modal('show');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>
+{% endblock content %}

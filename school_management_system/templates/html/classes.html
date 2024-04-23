@@ -1,0 +1,76 @@
+{% extends "html/base.html" %}
+{% block title %}Staff{% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'html/sidebar.html' %}
+        <div class="col">
+            <div class="row mb-3">
+                <div class="col-md-auto mt-5">
+                    <a href="{% url 'add_class' %}" class="btn btn-primary">Add Class</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table" id="staff-table">
+                        <thead>
+                            <tr>
+                                <th>Class Count</th>
+                                <th>Class Time</th>
+                                <th>Teacher</th>
+                                <th>Subject</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for class_obj in classes %}
+                                <tr data-class-id="{{ class_obj.id }}">
+                                    <td>{{ class_obj.class_count }}</td>
+                                    <td>{{ class_obj.class_time }}</td>
+                                    <td>{{ class_obj.teacher }}</td>
+                                    <td>{{ class_obj.subject }}</td>
+                                    <td>
+                                        <button class='btn btn-danger btn-delete'>Delete</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function() {
+            const tr = this.closest('tr');
+            const studentId = tr.getAttribute('data-class-id');
+            
+            fetch(`/delete_class/${studentId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // If deletion is successful, remove the row from the table
+                    tr.remove();
+                } else {
+                    console.error('Error deleting staff member');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>
+{% endblock content %}

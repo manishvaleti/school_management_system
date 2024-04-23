@@ -1,0 +1,81 @@
+{% extends "html/base.html" %}
+{% block title %}Payments{% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'html/sidebar.html' %}
+        <div class="col">
+            <div class="row mb-3">
+                <div class="col-md-auto mt-5">
+                    <a href="{% url 'add_payment' %}" class="btn btn-primary">Add Payment</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table" id="staff-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Total Amount</th>
+                                <th>Due Amount</th>
+                                <th>Paid Amount</th>
+                                <th>Payment Date</th>
+                                <th>Due Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in payments %}
+                                <tr data-payment-id="{{ payment.id }}">
+                                    <td>{{ payment.student }}</td>
+                                    <td>{{ payment.total_amount }}</td>
+                                    <td>{{ payment.due_amount }}</td>
+                                    <td>{{ payment.paid_amount }}</td>
+                                    <td>{{ payment.payment_date }}</td>
+                                    <td>{{ payment.due_date }}</td>
+                                    <td>
+                                        <a href={% url 'edit_payment' payment.id %} class='btn btn-success'>Edit</a>
+                                        <button class='btn btn-danger btn-delete'>Delete</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function() {
+            const tr = this.closest('tr');
+            const studentId = tr.getAttribute('data-payment-id');
+            
+            fetch(`/delete_payment/${studentId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // If deletion is successful, remove the row from the table
+                    tr.remove();
+                } else {
+                    console.error('Error deleting staff member');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>
+{% endblock content %}
